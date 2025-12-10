@@ -1,0 +1,51 @@
+import sys
+import pygame
+from ..personagem.androide_01 import Androide_01
+
+#Laço para eventos do teclado e mouse
+def check(androide_01):
+
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+          sys.exit()
+        
+        # Direita
+        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
+            androide_01.movimento_direita = True
+
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
+                androide_01.movimento_direita = False
+                androide_01.movimento_esquerda = False
+
+        elif evento.type == pygame.KEYUP and evento.key == pygame.K_RIGHT:
+           androide_01.movimento_direita = False
+
+
+        # Esquerda
+        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
+            androide_01.movimento_esquerda = True
+
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
+                androide_01.movimento_esquerda = False
+                androide_01.movimento_direita = False
+
+        elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
+           androide_01.movimento_esquerda = False
+
+        # Pulo
+        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_UP:
+            androide_01.movimento_pulo = True
+
+        elif evento.type == pygame.KEYUP and evento.key == pygame.K_UP:
+            androide_01.movimento_pulo = False
+            androide_01.segundo_pulo = True
+
+        # Descer
+        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_DOWN:
+            androide_01.movimento_descer = True
+        
+        elif evento.type == pygame.KEYUP and evento.key == pygame.K_DOWN:
+            androide_01.movimento_descer = False
+        
+
+        
