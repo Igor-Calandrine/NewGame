@@ -1,7 +1,7 @@
 """.get_rect, set_mode - transformam a imagem em dados de Surface retângular. Suas variáveis tem nomes para completar os dados. Por isso a variável #tela é usada aqui."""
 import pygame
 
-from .carregar_imagens import carregar_imagens_parado, carregar_imagens_correndo
+from .carregar_imagens import *
 
 
 class Androide_01():
@@ -10,23 +10,16 @@ class Androide_01():
 
         self.tela = tela 
 
-        #Carrega a imagem
-        imagem_pulo_direita = r"C:\Users\perni\OneDrive\Área de Trabalho\NewGame\configuracoes\personagem\img\androide_01_pd.png"
-        imagem_pulo_esquerda = r"C:\Users\perni\OneDrive\Área de Trabalho\NewGame\configuracoes\personagem\img\androide_01_pe.png"
+        self.imagens_parado, self.mascaras_parado = img_parado()
+        self.imagens_correndo, self.mascaras_correndo = img_correndo()
+        self.imagem_pulo_direita = img_correndo()
+        self.imagem_pulo_esquerda = img_correndo()
 
-        self.imagens_parado, self.mascaras_parado = carregar_imagens_parado()
-        self.imagens_correndo, self.mascaras_correndo = carregar_imagens_correndo()
-
-        self.imagem_pulo_direita = pygame.image.load(imagem_pulo_direita)
-        self.imagem_pulo_esquerda = pygame.image.load(imagem_pulo_esquerda)
-
-        self.frame_atual = 0
-        self.velocidade_frame = 0.01538
-
+        #Criação da imagem e seu surface
         self.imagem = self.imagens_parado[0]
         self.retangulo = self.imagem.get_rect()
 
-        #Referênia da imagem
+        #Referênia de posicionamento da imagem
         self.tela_margem = tela.get_rect() 
         self.retangulo.centerx = self.tela_margem.centerx
         self.retangulo.centery = self.tela_margem.centery
@@ -36,6 +29,9 @@ class Androide_01():
         self.centery_float = float(self.retangulo.centery)
 
         #Movimentaação
+        self.frame_atual = 0
+        self.velocidade_frame = 0.01538
+        
         self.direção = "direita"
 
         self.movimento_direita = False
@@ -45,7 +41,7 @@ class Androide_01():
         
         self.velocidade = 0.25
         
-        self.velocidade_pulo_i = -0.35
+        self.velocidade_pulo_i = -0.40
         self.velocidade_pulo = 0
 
         self.velocidade_y = 0
