@@ -9,28 +9,26 @@ def check(androide_01):
         if evento.type == pygame.QUIT:
           sys.exit()
         
-        # Direita
-        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
-            androide_01.movimento_direita = True
-
-            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
+        # Movimento eixo X
+        if evento.type == pygame.KEYDOWN:
+        
+            if evento.key == pygame.K_RIGHT:
+                androide_01.movimento_correr = True
+                androide_01.movimento_direita = True
+                androide_01.movimento_esquerda = False
+            elif evento.key == pygame.K_LEFT:
+                androide_01.movimento_correr = True
                 androide_01.movimento_direita = False
+                androide_01.movimento_esquerda = True
+     
+        if evento.type == pygame.KEYUP:
+            if evento.key == pygame.K_RIGHT:
+                androide_01.movimento_direita = False
+            elif evento.key == pygame.K_LEFT:
                 androide_01.movimento_esquerda = False
 
-        elif evento.type == pygame.KEYUP and evento.key == pygame.K_RIGHT:
-           androide_01.movimento_direita = False
-
-
-        # Esquerda
-        if evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
-            androide_01.movimento_esquerda = True
-
-            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
-                androide_01.movimento_esquerda = False
-                androide_01.movimento_direita = False
-
-        elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
-           androide_01.movimento_esquerda = False
+        if androide_01.movimento_esquerda == False and androide_01.movimento_direita == False:
+            androide_01.movimento_correr = False
 
         # Pulo
         if evento.type == pygame.KEYDOWN and evento.key == pygame.K_UP:

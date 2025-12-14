@@ -12,35 +12,39 @@ class Androide_01():
 
         self.imagens_parado, self.mascaras_parado = img_parado()
         self.imagens_correndo, self.mascaras_correndo = img_correndo()
-        self.imagem_pulo_direita = img_correndo()
-        self.imagem_pulo_esquerda = img_correndo()
+        self.imagens_pulando, self.mascaras_pulando = img_pulando()
+        
 
-        #Criação da imagem e seu surface
+        # Criação da surface da tela, imagem
         self.imagem = self.imagens_parado[0]
-        self.retangulo = self.imagem.get_rect()
-
-        #Referênia de posicionamento da imagem
         self.tela_margem = tela.get_rect() 
-        self.retangulo.centerx = self.tela_margem.centerx
-        self.retangulo.centery = self.tela_margem.centery
-        self.retangulo.bottom = self.tela_margem.bottom
-        
-        self.centerx_float = float(self.retangulo.centerx)
-        self.centery_float = float(self.retangulo.centery)
+        self.imagem_margem = self.imagem.get_rect()
 
-        #Movimentaação
-        self.frame_atual = 0
-        self.velocidade_frame = 0.01538
+        # Referênia de posicionamento da imagem
+        self.imagem_margem.centerx = self.tela_margem.centerx
+        self.imagem_margem.bottom = self.tela_margem.bottom
         
+        self.centerx_float = float(self.imagem_margem.centerx)
+        self.centery_float = float(self.imagem_margem.centery)
+
+        # Frame Animação
+        self.frame_parado = 0
+        self.frame_parado_vel = 0.003845
+        self.frame_correndo = 0
+        self.frame_correndo_vel = 0.01538
+        self.frame_pulando = 0
+        self.frame_pulando_vel = 0.009228
+
+        # Flag de movimentação bool from check_eventos.py
         self.direção = "direita"
-
         self.movimento_direita = False
         self.movimento_esquerda = False
+        self.movimento_correr = False
         self.movimento_descer = False
         self.movimento_pulo = False
         
+        # Velocidade de movimento
         self.velocidade = 0.25
-        
         self.velocidade_pulo_i = -0.40
         self.velocidade_pulo = 0
 
@@ -56,29 +60,33 @@ class Androide_01():
         
     def movimentação (self):
         # Limitar na tela
-        if self.retangulo.right >= self.tela_margem.right:
+        if self.imagem_margem.right >= self.tela_margem.right:
             self.movimento_direita = False
-        if self.retangulo.left <= self.tela_margem.left:
+        if self.imagem_margem.left <= self.tela_margem.left:
             self.movimento_esquerda = False
-        if self.retangulo.top <= self.tela_margem.top:
+        if self.imagem_margem.top <= self.tela_margem.top:
             self.movimento_pulo = False
-        if self.retangulo.bottom >= self.tela_margem.bottom:
+        if self.imagem_margem.bottom >= self.tela_margem.bottom:
             self.movimento_descer = False
-            
+
         # Direita
-        if self.movimento_direita == True: 
+        if self.movimento_correr == True and self.movimento_direita == True: 
             self.direção = "direita"  
-            self.centerx_float += + self.velocidade
+            self.centerx_float += self.velocidade
             
         # Esquerda
-        if self.movimento_esquerda == True: 
+        if self.movimento_correr == True and self.movimento_esquerda == True: 
             self.direção = "esquerda"  
-            self.centerx_float += - self.velocidade
+            self.centerx_float -= self.velocidade
           
+        # Parado
+        if self.movimento_direita == False and self.movimento_esquerda == False:
+            self.movimento_correr = False
+
         # Flag se esta no chão
-        if self.retangulo.bottom < self.tela_margem.bottom:
+        if self.imagem_margem.bottom < self.tela_margem.bottom:
             self.posição_chão = False
-        elif self.retangulo.bottom >= self.tela_margem.bottom:
+        elif self.imagem_margem.bottom >= self.tela_margem.bottom:
             self.posição_chão = True
         
         # Pulo saindo do chão
@@ -98,66 +106,83 @@ class Androide_01():
         self.centery_float += self.velocidade_y
 
         # Chegou no chão
-        if self.movimento_pulo == False and self.retangulo.bottom >= self.tela_margem.bottom: 
-            self.retangulo.bottom = self.tela_margem.bottom
-            self.centery_float = self.retangulo.centery
+        if self.movimento_pulo == False and self.imagem_margem.bottom >= self.tela_margem.bottom: 
+            self.imagem_margem.bottom = self.tela_margem.bottom
+            self.centery_float = self.imagem_margem.centery
 
             self.contador_pulo = self.pulos_maximo
             self.velocidade_y = 0
             self.posição_chão = True
 
         # Animação de movimentos no chão
-        if self.posição_chão == True:
+        if self.posição_chão == True and self.movimento_pulo == False:
+            self.frame_pulando = 0
+        
+            # Parado Direita
+            if self.direção == "direita" and self.movimento_correr == False:
+                self.frame_parado += + self.frame_parado_vel
 
-            #Parado Direita
-            if self.direção == "direita" and self.movimento_direita == False and self.movimento_esquerda == False:
-                self.frame_atual += + self.velocidade_frame/4
+                if self.frame_parado >= len(self.imagens_parado):
+                    self.frame_parado = 0
 
-                if self.frame_atual >= len(self.imagens_parado):
-                    self.frame_atual = 0
+                self.imagem = self.imagens_parado[int(self.frame_parado)]
+                self.mascara = self.mascaras_parado[int(self.frame_parado)]
 
-                self.imagem = self.imagens_parado[int(self.frame_atual)]
-                self.mascara = self.mascaras_parado[int(self.frame_atual)]
+            # Parado Esquerda
+            if self.direção == "esquerda" and self.movimento_correr == False:
+                self.frame_parado += + self.frame_parado_vel
 
-            #Parado Esquerda
-            elif self.direção == "esquerda" and self.movimento_direita == False and self.movimento_esquerda == False:
-                self.frame_atual += + self.velocidade_frame/4
+                if self.frame_parado >= len(self.imagens_parado):
+                    self.frame_parado = 0
 
-                if self.frame_atual >= len(self.imagens_parado):
-                    self.frame_atual = 0
-
-                self.imagem = self.imagens_parado[int(self.frame_atual)]
+                self.imagem = self.imagens_parado[int(self.frame_parado)]
                 self.imagem = pygame.transform.flip(self.imagem, True, False)
-                self.mascara = pygame.transform.flip(self.imagem, True, False)
+                self.mascara = pygame.mask.from_surface(self.imagem)
             
-            #Correndo Direita
-            if self.direção == "direita" and self.movimento_direita == True:
-                self.frame_atual += + self.velocidade_frame
+            # Correndo
+            if self.movimento_correr == True:
+                self.frame_correndo += self.frame_correndo_vel
+                
+                if self.frame_correndo >= len(self.imagens_correndo):
+                    self.frame_correndo = 2
 
-                if self.frame_atual >= len(self.imagens_correndo):
-                    self.frame_atual = 2
+                # Direita
+                if self.direção == "direita":
+                    self.imagem = self.imagens_correndo[int(self.frame_correndo)]
+                    self.mascara = self.mascaras_correndo[int(self.frame_correndo)]
+                # Esquerda
+                elif self.direção == "esquerda":
+                    self.imagem = self.imagens_correndo[int(self.frame_correndo)]
+                    self.imagem = pygame.transform.flip(self.imagem, True, False)
+                    self.mascara = pygame.mask.from_surface(self.imagem)
 
-                self.imagem = self.imagens_correndo[int(self.frame_atual)]
-                self.mascara = self.mascaras_correndo[int(self.frame_atual)]
+        # No ar
+        if self.posição_chão == False:
+            self.frame_pulando += self.frame_pulando_vel
 
-            #Correndo Esquerda
-            elif self.direção == "esquerda" and self.movimento_esquerda == True:
-                self.frame_atual += + self.velocidade_frame
+            # Sudindo
+            if self.velocidade_y <= 0:
+                self.frame_pulando = min(max((self.frame_pulando), 0), 3)
+                print(self.frame_pulando)
+             # Descendo
+            elif self.velocidade_y > 0:
+                self.frame_pulando = min(max(self.frame_pulando, 4), len(self.imagens_pulando) -1)
 
-                if self.frame_atual >= len(self.imagens_correndo):
-                    self.frame_atual = 2
-
-                self.imagem = self.imagens_correndo[int(self.frame_atual)]
+            if self.direção == "direita":
+                self.imagem = self.imagens_pulando[int(self.frame_pulando)]
+                self.mascara = self.mascaras_pulando[int(self.frame_pulando)]
+            elif self.direção == "esquerda":
+                self.imagem = self.imagens_pulando[int(self.frame_pulando)]
                 self.imagem = pygame.transform.flip(self.imagem, True, False)
-                self.mascara = self.mascaras_correndo[int(self.frame_atual)]
+                self.mascara = pygame.mask.from_surface(self.imagem) 
 
-        #Posição arredondada
-        self.retangulo.centerx = int(round(self.centerx_float))  
-        self.retangulo.centery = int(round(self.centery_float)) 
+        #Posição arredondada e atualizada
+        self.imagem_margem.centerx = int(round(self.centerx_float))  
+        self.imagem_margem.centery = int(round(self.centery_float)) 
 
-    def blitme(self):
+    def redenrizar (self):
         #Desenha a imagem
-        self.tela.blit(self.imagem, self.retangulo)
+        self.tela.blit(self.imagem, self.imagem_margem)
 
 
                 

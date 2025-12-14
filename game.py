@@ -23,8 +23,8 @@ def jogo_aberto():
         eventos.check(androide_01)
 
         tela.fill(tela_fundo) #Pinta o fundo da tela
-        androide_01.blitme()
         androide_01.movimentação()
+        androide_01.redenrizar()
         pygame.display.flip() #Deixa a tela mais recente visível
 
 jogo_aberto()
