@@ -36,7 +36,7 @@ class Androide_01():
         self.frame_pulando = 0
         self.frame_pulando_vel = 0.0119
         self.frame_aterrisando = 0
-        self.frame_aterrisando_vel = 0.01785
+        self.frame_aterrisando_vel = 0.01685
 
         # Flag de movimentação bool from check_eventos.py
         self.direção = "direita"
