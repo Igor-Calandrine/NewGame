@@ -37,6 +37,10 @@ def check(androide_01):
         elif evento.type == pygame.KEYUP and evento.key == pygame.K_UP:
             androide_01.movimento_pulo = False
             androide_01.segundo_pulo = True
+            
+            # Limita altura do pulo
+            if androide_01.velocidade_y < 0:
+                androide_01.velocidade_y = 0
 
         # Descer
         if evento.type == pygame.KEYDOWN and evento.key == pygame.K_DOWN:

@@ -47,3 +47,16 @@ def img_pulando():
 
     return imagens_pulando, mascaras_pulando 
 
+def img_aterrisando():
+
+    imagens_aterrisando = []
+    mascaras_aterrisando = []
+
+    for i in range(1, 4):
+        imagem = pygame.image.load(f"{arquivos_imagem}/androide_01_aterrisando{i}.png").convert_alpha()
+        mascara = pygame.mask.from_surface(imagem)
+        imagens_aterrisando.append(imagem)
+        mascaras_aterrisando.append(mascara)  
+
+    return imagens_aterrisando, mascaras_aterrisando
+

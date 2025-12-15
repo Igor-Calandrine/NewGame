@@ -13,6 +13,7 @@ class Androide_01():
         self.imagens_parado, self.mascaras_parado = img_parado()
         self.imagens_correndo, self.mascaras_correndo = img_correndo()
         self.imagens_pulando, self.mascaras_pulando = img_pulando()
+        self.imagens_aterrisando, self.mascaras_aterrisando = img_aterrisando()
         
 
         # Criação da surface da tela, imagem
@@ -33,7 +34,9 @@ class Androide_01():
         self.frame_correndo = 0
         self.frame_correndo_vel = 0.01538
         self.frame_pulando = 0
-        self.frame_pulando_vel = 0.009228
+        self.frame_pulando_vel = 0.0119
+        self.frame_aterrisando = 0
+        self.frame_aterrisando_vel = 0.01785
 
         # Flag de movimentação bool from check_eventos.py
         self.direção = "direita"
@@ -42,6 +45,7 @@ class Androide_01():
         self.movimento_correr = False
         self.movimento_descer = False
         self.movimento_pulo = False
+        self.movimento_aterrisando = False
         
         # Velocidade de movimento
         self.velocidade = 0.25
@@ -52,7 +56,7 @@ class Androide_01():
         self.gravidade = 0.00115
         
         self.pulos_maximo = 2
-        self.contador_pulo = 2
+        self.contador_pulo = self.pulos_maximo
         self.segundo_pulo = False
         
         self.posição_chão = True
@@ -97,9 +101,10 @@ class Androide_01():
             self.contador_pulo = 1
 
         # Segundo pulo
-        elif self.movimento_pulo == True and self.posição_chão == False and self.contador_pulo > 0 and self.segundo_pulo == True:
-            self.velocidade_y = self.velocidade_pulo_i
-            self.contador_pulo = 0
+        elif self.movimento_pulo == True and self.posição_chão == False:
+            if self.segundo_pulo == True and self.contador_pulo > 0:
+                self.velocidade_y = self.velocidade_pulo_i
+                self.contador_pulo = 0
                 
         # Movimento Gravitcional
         self.velocidade_y += self.gravidade
@@ -114,30 +119,46 @@ class Androide_01():
             self.velocidade_y = 0
             self.posição_chão = True
 
+# ------------------------------------------------------------------
         # Animação de movimentos no chão
         if self.posição_chão == True and self.movimento_pulo == False:
             self.frame_pulando = 0
         
-            # Parado Direita
-            if self.direção == "direita" and self.movimento_correr == False:
+            # Parado
+            if self.movimento_aterrisando == False and self.movimento_correr == False:
                 self.frame_parado += + self.frame_parado_vel
-
                 if self.frame_parado >= len(self.imagens_parado):
                     self.frame_parado = 0
+                
+                # Direita
+                if self.direção == "direita":
+                    self.imagem = self.imagens_parado[int(self.frame_parado)]
+                    self.mascara = self.mascaras_parado[int(self.frame_parado)]
+                # Esquerda
+                elif self.direção == "esquerda":
+                    self.imagem = self.imagens_parado[int(self.frame_parado)]
+                    self.imagem = pygame.transform.flip(self.imagem, True, False)
+                    self.mascara = pygame.mask.from_surface(self.imagem)
 
-                self.imagem = self.imagens_parado[int(self.frame_parado)]
-                self.mascara = self.mascaras_parado[int(self.frame_parado)]
+            # Aterrisando
+            if self.movimento_aterrisando == True and self.movimento_correr == False:
+                self.frame_aterrisando += self.frame_aterrisando_vel
+                self.frame_aterrisando = min(max((self.frame_aterrisando), 0), 2)
+                print(self.frame_aterrisando)
+                
+                if self.frame_aterrisando == 2:
+                    self.movimento_aterrisando = False
+                    self.frame_aterrisando = 0
 
-            # Parado Esquerda
-            if self.direção == "esquerda" and self.movimento_correr == False:
-                self.frame_parado += + self.frame_parado_vel
-
-                if self.frame_parado >= len(self.imagens_parado):
-                    self.frame_parado = 0
-
-                self.imagem = self.imagens_parado[int(self.frame_parado)]
-                self.imagem = pygame.transform.flip(self.imagem, True, False)
-                self.mascara = pygame.mask.from_surface(self.imagem)
+                # Direita
+                if self.direção == "direita":
+                    self.imagem = self.imagens_aterrisando[int(self.frame_aterrisando)]
+                    self.mascara = self.mascaras_aterrisando[int(self.frame_aterrisando)]
+                # Esquerda
+                elif self.direção == "esquerda":
+                    self.imagem = self.imagens_aterrisando[int(self.frame_aterrisando)]
+                    self.imagem = pygame.transform.flip(self.imagem, True, False)
+                    self.mascara = pygame.mask.from_surface(self.imagem)
             
             # Correndo
             if self.movimento_correr == True:
@@ -163,10 +184,10 @@ class Androide_01():
             # Sudindo
             if self.velocidade_y <= 0:
                 self.frame_pulando = min(max((self.frame_pulando), 0), 3)
-                print(self.frame_pulando)
-             # Descendo
+            # Descendo
             elif self.velocidade_y > 0:
-                self.frame_pulando = min(max(self.frame_pulando, 4), len(self.imagens_pulando) -1)
+                self.frame_pulando = min(max(self.frame_pulando, 4), 7)
+                self.movimento_aterrisando = True
 
             if self.direção == "direita":
                 self.imagem = self.imagens_pulando[int(self.frame_pulando)]
