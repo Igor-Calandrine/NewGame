@@ -144,7 +144,6 @@ class Androide_01():
             if self.movimento_aterrisando == True and self.movimento_correr == False:
                 self.frame_aterrisando += self.frame_aterrisando_vel
                 self.frame_aterrisando = min(max((self.frame_aterrisando), 0), 2)
-                print(self.frame_aterrisando)
                 
                 if self.frame_aterrisando == 2:
                     self.movimento_aterrisando = False
@@ -177,7 +176,7 @@ class Androide_01():
                     self.imagem = pygame.transform.flip(self.imagem, True, False)
                     self.mascara = pygame.mask.from_surface(self.imagem)
 
-        # No ar
+        # Animação de movimentos no ar
         if self.posição_chão == False:
             self.frame_pulando += self.frame_pulando_vel
 
@@ -201,7 +200,7 @@ class Androide_01():
         self.imagem_margem.centerx = int(round(self.centerx_float))  
         self.imagem_margem.centery = int(round(self.centery_float)) 
 
-    def redenrizar (self):
+    def renderizar (self):
         #Desenha a imagem
         self.tela.blit(self.imagem, self.imagem_margem)
 
