@@ -2,9 +2,10 @@ import sys
 import pygame
 from ..personagem.androide_01 import Androide_01
 from ..personagem.ataques.blaster import Blaster
+from ..controle_tiro import Controle_Tiro
 
 #Laço para eventos do teclado e mouse
-def check(tela, androide_01, blasters):
+def check(tela, androide_01, blasters, controle_tiro):
 
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
@@ -52,8 +53,13 @@ def check(tela, androide_01, blasters):
 
         # Blaster
         if evento.type == pygame.KEYDOWN and evento.key == pygame.K_SPACE:
-            blaster_novo = Blaster(tela, androide_01)
-            blasters.add(blaster_novo)
+            if controle_tiro.blaster_tiro == True:
+                androide_01.movimento_atirando = True
+                blaster_novo = Blaster(tela, androide_01)
+                blasters.add(blaster_novo)
+                controle_tiro.blaster_tempo_inicial = pygame.time.get_ticks()
+
+            
                
 
         

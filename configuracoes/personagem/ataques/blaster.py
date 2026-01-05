@@ -1,5 +1,6 @@
 import pygame
 from pygame.sprite import Sprite, Group
+from pygame.time import get_ticks
 
 class Blaster(Sprite):
     # Classe para configurar os ataques em blaster
@@ -11,7 +12,7 @@ class Blaster(Sprite):
         self.tela_surface = tela.get_rect()
         self.androide_01 = androide_01
 
-        self.blaster_velocidade = 0.2
+        self.blaster_velocidade = 0.3
         self.blaster_largura = 20
         self.blaster_altura = 10
         self.blaster_cor = (60, 60, 60)
@@ -49,3 +50,5 @@ class Blaster(Sprite):
 
     def renderizar(self):
         pygame.draw.rect(self.tela, self.blaster_cor, self.blaster_surface)
+
+
