@@ -10,11 +10,13 @@ class Androide_01():
 
         self.tela = tela 
 
+        #Frame das imagens
         self.imagens_parado, self.mascaras_parado = img_parado()
         self.imagens_correndo, self.mascaras_correndo = img_correndo()
         self.imagens_pulando, self.mascaras_pulando = img_pulando()
         self.imagens_aterrisando, self.mascaras_aterrisando = img_aterrisando()
         self.imagens_atirando_parado, self.mascaras_atirando_parado = img_atirando_parado ()
+        self.imagens_atirando_correndo, self.mascaras_atirando_correndo = img_atirando_correndo()
 
         # Criação da surface da tela, imagem
         self.imagem = self.imagens_parado[0]
@@ -49,7 +51,8 @@ class Androide_01():
         self.movimento_descer = False
         self.movimento_pulo = False
         self.movimento_aterrisando = False
-        self.movimento_atirando = False
+        self.movimento_atirando_parado = False
+        self.movimento_atirando_correndo = False
         
         # Velocidade de movimento
         self.velocidade = 0.25
@@ -129,7 +132,7 @@ class Androide_01():
             self.frame_pulando = 0
         
             # Parado
-            if self.movimento_aterrisando == False and self.movimento_correr == False and self.movimento_atirando == False:
+            if self.movimento_aterrisando == False and self.movimento_correr == False and self.movimento_atirando_parado == False:
                 self.frame_parado += + self.frame_parado_vel
                 if self.frame_parado >= len(self.imagens_parado):
                     self.frame_parado = 0
@@ -145,11 +148,11 @@ class Androide_01():
                     self.mascara = pygame.mask.from_surface(self.imagem)
 
             # Parado Atirando
-            elif self.movimento_aterrisando == False and self.movimento_correr == False and self.movimento_atirando == True:
+            elif self.movimento_aterrisando == False and self.movimento_correr == False and self.movimento_atirando_parado == True:
                 self.frame_atirando += + self.frame_atirando_vel
                 if self.frame_atirando >= len(self.imagens_atirando_parado):
                     self.frame_atirando = 0
-                    self.movimento_atirando = False
+                    self.movimento_atirando_parado = False
 
                 # Direita
                 if self.direção == "direita":
@@ -182,25 +185,37 @@ class Androide_01():
             
             # Correndo
             if self.movimento_correr == True:
-                self.movimento_atirando = False
+                self.movimento_atirando_parado = False
                 self.frame_correndo += self.frame_correndo_vel
                 
                 if self.frame_correndo >= len(self.imagens_correndo):
                     self.frame_correndo = 2
 
-                # Direita
-                if self.direção == "direita":
-                    self.imagem = self.imagens_correndo[int(self.frame_correndo)]
-                    self.mascara = self.mascaras_correndo[int(self.frame_correndo)]
-                # Esquerda
-                elif self.direção == "esquerda":
-                    self.imagem = self.imagens_correndo[int(self.frame_correndo)]
-                    self.imagem = pygame.transform.flip(self.imagem, True, False)
-                    self.mascara = pygame.mask.from_surface(self.imagem)
+                if self.movimento_atirando_correndo == False:
+                    if self.direção == "direita":
+                        self.imagem = self.imagens_correndo[int(self.frame_correndo)]
+                        self.mascara = self.mascaras_correndo[int(self.frame_correndo)]
+                    elif self.direção == "esquerda":
+                        self.imagem = self.imagens_correndo[int(self.frame_correndo)]
+                        self.imagem = pygame.transform.flip(self.imagem, True, False)
+                        self.mascara = pygame.mask.from_surface(self.imagem)
+                
+                elif self.movimento_atirando_correndo == True: 
+                    if self.direção == "direita":
+                        self.imagem = self.imagens_atirando_correndo[int(self.frame_correndo)]
+                        self.mascara = self.mascaras_atirando_correndo[int(self.frame_correndo)]
+                    elif self.direção == "esquerda":
+                        self.imagem = self.imagens_atirando_correndo[int(self.frame_correndo)]
+                        self.imagem = pygame.transform.flip(self.imagem, True, False)
+                        self.mascara = pygame.mask.from_surface(self.imagem)
+            else:
+                self.frame_correndo = 0
+                self.movimento_atirando_correndo = False
+
 
         # Animação de movimentos no ar
         if self.posição_chão == False:
-            self.movimento_atirando = False
+            self.movimento_atirando_parado = False
             self.frame_pulando += self.frame_pulando_vel
 
             # Sudindo

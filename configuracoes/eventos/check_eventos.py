@@ -54,10 +54,16 @@ def check(tela, androide_01, blasters, controle_tiro):
         # Blaster
         if evento.type == pygame.KEYDOWN and evento.key == pygame.K_SPACE:
             if controle_tiro.blaster_tiro == True:
-                androide_01.movimento_atirando = True
+                
+                if androide_01.movimento_correr == False:
+                    androide_01.movimento_atirando_parado = True
+                elif androide_01.movimento_correr == True:
+                    androide_01.movimento_atirando_correndo = True
+
                 blaster_novo = Blaster(tela, androide_01)
                 blasters.add(blaster_novo)
                 controle_tiro.blaster_tempo_inicial = pygame.time.get_ticks()
+
 
             
                

@@ -28,7 +28,7 @@ def img_correndo():
     mascaras = []
 
     for i in range(1, 17):
-        imagem = pygame.image.load(f"{arquivos_imagem}/androide_01_d{i}.png").convert_alpha()
+        imagem = pygame.image.load(f"{arquivos_imagem}/androide_01_correndo{i}.png").convert_alpha()
         inserir_imagens_lista(imagem, imagens, mascaras) 
     return imagens, mascaras  
 
@@ -53,7 +53,7 @@ def img_aterrisando():
     return imagens, mascaras
 
 
-def img_atirando_parado ():
+def img_atirando_parado():
     imagens = []
     mascaras = []
 
@@ -62,5 +62,13 @@ def img_atirando_parado ():
         inserir_imagens_lista(imagem, imagens, mascaras)
     return imagens, mascaras
 
+def img_atirando_correndo():
+    imagens = []
+    mascaras = []
+
+    for i in range(1, 17):
+        imagem = pygame.image.load(f"{arquivos_imagem}/androide_01_atirando_correndo{i}.png").convert_alpha()
+        inserir_imagens_lista(imagem, imagens, mascaras)
+    return imagens, mascaras
 
 
